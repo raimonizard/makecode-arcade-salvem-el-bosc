@@ -27,6 +27,8 @@ def on_right_pressed():
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def init():
+    hud.forest_hud_healthy(7)
+    hud.forest_hud_burned(2)
     hud.danger_hud_label("Risc d'incendi")
     hud.fire_hud_label("Focs:")
     hud.forest_hud_label("Salut del bosc")
@@ -94,6 +96,7 @@ mySprite = sprites.create(assets.image("""
     SpriteKind.player)
 controller.move_sprite(mySprite)
 scene.camera_follow_sprite(mySprite)
+game.show_long_text("A per tirar aigua", DialogLayout.TOP)
 for index in range(4):
     sprites.create_spreading_fire(assets.tile("""
             tree
