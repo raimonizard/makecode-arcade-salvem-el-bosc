@@ -26,6 +26,8 @@ def on_right_pressed():
         True)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
+def choosePlane():
+    game.splash("hola")
 def init():
     game.set_dryness_of_grass(randint(2, 4))
     game.set_strength_of_wind(randint(2, 4))
@@ -52,11 +54,6 @@ def on_life_zero():
     game.set_game_over_message(False, "S'ha cremat tot!!!")
 info.on_life_zero(on_life_zero)
 
-def on_game_over(win):
-    game.game_over(False)
-    game.set_game_over_message(False, "S'ha cremat tot!!!")
-game.on_game_over(on_game_over)
-
 def on_a_repeated():
     sprites.spray(mySprite, assets.image("""
         water
@@ -82,19 +79,15 @@ scene.on_overlap_tile(SpriteKind.water,
     on_overlap_tile)
 
 def chooseDifficulty():
-    tiles.set_tilemap(tilemap("""
-                level1
-            """))
-    game.splash("Benvingut/da bomber/a!")
     global difficulty
+    tiles.set_tilemap(tilemap("""
+        level1
+    """))
+    game.splash("Benvingut/da bomber/a!")
     difficulty = game.ask_for_number("Escull la dificultat del bosc (1 o 2)", 1)
-    while (difficulty != 1 and difficulty != 2):
+    while difficulty != 1 and difficulty != 2:
         game.splash("Tria 1 o 2")
         difficulty = game.ask_for_number("Escull dificultat (1 o 2)", 1)
-
-def choosePlane():
-    game.splash("hola")    
-
 def selectDifficulty():
     global level2
     level2 = 0
@@ -109,19 +102,19 @@ def selectDifficulty():
         else:
             game.show_long_text("Puja o baixa amb les flextes", DialogLayout.BOTTOM)
         pause(2000)
-
 level2 = 0
-difficulty = 1
 mySprite: Sprite = None
+difficulty = 0
+difficulty = 1
 chooseDifficulty()
-if(difficulty == 1):
+if difficulty == 1:
     tiles.set_tilemap(tilemap("""
-            level1
-        """))
+        level1
+    """))
 else:
     tiles.set_tilemap(tilemap("""
-            level2
-        """))
+        level2
+    """))
 mySprite = sprites.create(assets.image("""
         Fire Plane 2 Right
     """),
@@ -141,19 +134,6 @@ for index in range(randint(5, 20)):
             tree fire
         """))
 
-
 def on_on_update():
     sprites.random_spread()
 game.on_update(on_on_update)
-
-def on_forever():
-    if info.life() < 3:
-        mySprite.say_text("Afanya't!!", 500, True)
-forever(on_forever)
-def on_zero(status):
-    pass
-
-statusbars.on_zero(StatusBarKind.health, on_zero)
-def on_display_updated(status, image):
-    pass
-statusbars.on_display_updated(StatusBarKind.health, on_display_updated)

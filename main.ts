@@ -16,6 +16,10 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_presse
             Fire Plane 2 Right Animation
         `, 300, true)
 })
+function choosePlane() {
+    game.splash("hola")
+}
+
 function init() {
     game.set_dryness_of_grass(randint(2, 4))
     game.set_strength_of_wind(randint(2, 4))
@@ -41,10 +45,6 @@ info.onLifeZero(function on_life_zero() {
     game.gameOver(false)
     game.setGameOverMessage(false, "S'ha cremat tot!!!")
 })
-game.onGameOver(function on_game_over(win: boolean) {
-    game.gameOver(false)
-    game.setGameOverMessage(false, "S'ha cremat tot!!!")
-})
 controller.A.onEvent(ControllerButtonEvent.Repeated, function on_a_repeated() {
     sprites.spray(mySprite, assets.image`
         water
@@ -58,20 +58,16 @@ scene.onOverlapTile(SpriteKind.Water, assets.tile`
     sprites.change_flame_strength_by(location3, -1)
 })
 function chooseDifficulty() {
-    tiles.setTilemap(tilemap`
-                level1
-            `)
-    game.splash("Benvingut/da bomber/a!")
     
+    tiles.setTilemap(tilemap`
+        level1
+    `)
+    game.splash("Benvingut/da bomber/a!")
     difficulty = game.askForNumber("Escull la dificultat del bosc (1 o 2)", 1)
     while (difficulty != 1 && difficulty != 2) {
         game.splash("Tria 1 o 2")
         difficulty = game.askForNumber("Escull dificultat (1 o 2)", 1)
     }
-}
-
-function choosePlane() {
-    game.splash("hola")
 }
 
 function selectDifficulty() {
@@ -94,17 +90,18 @@ function selectDifficulty() {
 }
 
 let level2 = 0
-let difficulty = 1
 let mySprite : Sprite = null
+let difficulty = 0
+difficulty = 1
 chooseDifficulty()
 if (difficulty == 1) {
     tiles.setTilemap(tilemap`
-            level1
-        `)
+        level1
+    `)
 } else {
     tiles.setTilemap(tilemap`
-            level2
-        `)
+        level2
+    `)
 }
 
 mySprite = sprites.create(assets.image`
@@ -125,16 +122,4 @@ for (let index = 0; index < randint(5, 20); index++) {
 }
 game.onUpdate(function on_on_update() {
     sprites.random_spread()
-})
-forever(function on_forever() {
-    if (info.life() < 3) {
-        mySprite.sayText("Afanya't!!", 500, true)
-    }
-    
-})
-statusbars.onZero(StatusBarKind.Health, function on_zero(status: StatusBarSprite) {
-    
-})
-statusbars.onDisplayUpdated(StatusBarKind.Health, function on_display_updated(status: StatusBarSprite, image: Image) {
-    
 })
