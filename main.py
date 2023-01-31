@@ -4,16 +4,16 @@ controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
 
 def on_fire_created(location):
     scene.create_particle_effect_at_location(location, effects.fire)
-    sprites.set_flame_strength(location, 20)
+    sprites.set_flame_strength(location, randint(15, 25))
     music.knock.play()
 sprites.on_fire_created(on_fire_created)
 
 def on_left_pressed():
     animation.run_image_animation(mySprite,
         assets.animation("""
-            Fire Plane 2 Left Animation
+            Fire Plane 2 Left Animation 1
         """),
-        700,
+        300,
         True)
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
@@ -22,11 +22,14 @@ def on_right_pressed():
         assets.animation("""
             Fire Plane 2 Right Animation
         """),
-        700,
+        300,
         True)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def init():
+    game.set_dryness_of_grass(randint(2, 4))
+    game.set_strength_of_wind(randint(2, 4))
+    game.set_health_of_trees(randint(4, 9))
     hud.forest_hud_healthy(7)
     hud.forest_hud_burned(2)
     hud.danger_hud_label("Risc d'incendi")
@@ -43,6 +46,16 @@ def on_fire_destroyed(location2):
     """))
     music.thump.play()
 sprites.on_fire_destroyed(on_fire_destroyed)
+
+def on_life_zero():
+    game.game_over(False)
+    game.set_game_over_message(False, "S'ha cremat tot!!!")
+info.on_life_zero(on_life_zero)
+
+def on_game_over(win):
+    game.game_over(False)
+    game.set_game_over_message(False, "S'ha cremat tot!!!")
+game.on_game_over(on_game_over)
 
 def on_a_repeated():
     sprites.spray(mySprite, assets.image("""
@@ -68,6 +81,20 @@ scene.on_overlap_tile(SpriteKind.water,
     """),
     on_overlap_tile)
 
+def chooseDifficulty():
+    tiles.set_tilemap(tilemap("""
+                level1
+            """))
+    game.splash("Benvingut/da bomber/a!")
+    global difficulty
+    difficulty = game.ask_for_number("Escull la dificultat del bosc (1 o 2)", 1)
+    while (difficulty != 1 and difficulty != 2):
+        game.splash("Tria 1 o 2")
+        difficulty = game.ask_for_number("Escull dificultat (1 o 2)", 1)
+
+def choosePlane():
+    game.splash("hola")    
+
 def selectDifficulty():
     global level2
     level2 = 0
@@ -82,32 +109,51 @@ def selectDifficulty():
         else:
             game.show_long_text("Puja o baixa amb les flextes", DialogLayout.BOTTOM)
         pause(2000)
+
 level2 = 0
+difficulty = 1
 mySprite: Sprite = None
-game.set_dryness_of_grass(randint(1, 4))
-game.set_strength_of_wind(randint(1, 4))
-game.set_health_of_trees(randint(5, 8))
-tiles.set_tilemap(tilemap("""
-    level1
-"""))
+chooseDifficulty()
+if(difficulty == 1):
+    tiles.set_tilemap(tilemap("""
+            level1
+        """))
+else:
+    tiles.set_tilemap(tilemap("""
+            level2
+        """))
 mySprite = sprites.create(assets.image("""
         Fire Plane 2 Right
     """),
     SpriteKind.player)
 controller.move_sprite(mySprite)
 scene.camera_follow_sprite(mySprite)
-game.show_long_text("A per tirar aigua", DialogLayout.TOP)
-for index in range(4):
+game.show_long_text("Mou l'avió amb el cursor", DialogLayout.BOTTOM)
+music.play(music.string_playable("B G B G B G B G ", 120),
+    music.PlaybackMode.LOOPING_IN_BACKGROUND)
+game.show_long_text("Prem A per tirar aigua", DialogLayout.TOP)
+init()
+for index in range(randint(5, 20)):
     sprites.create_spreading_fire(assets.tile("""
             tree
         """),
         assets.tile("""
             tree fire
         """))
-init()
-music.play(music.string_playable("B G B G B G B G ", 120),
-    music.PlaybackMode.LOOPING_IN_BACKGROUND)
+
 
 def on_on_update():
     sprites.random_spread()
 game.on_update(on_on_update)
+
+def on_forever():
+    if info.life() < 3:
+        mySprite.say_text("Afanya't!!", 500, True)
+forever(on_forever)
+def on_zero(status):
+    pass
+
+statusbars.on_zero(StatusBarKind.health, on_zero)
+def on_display_updated(status, image):
+    pass
+statusbars.on_display_updated(StatusBarKind.health, on_display_updated)

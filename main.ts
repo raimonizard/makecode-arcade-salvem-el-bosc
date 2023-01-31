@@ -3,20 +3,23 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function on_b_pressed() {
 })
 sprites.on_fire_created(function on_fire_created(location: tiles.Location) {
     scene.createParticleEffectAtLocation(location, effects.fire)
-    sprites.set_flame_strength(location, 20)
+    sprites.set_flame_strength(location, randint(15, 25))
     music.knock.play()
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
     animation.runImageAnimation(mySprite, assets.animation`
-            Fire Plane 2 Left Animation
-        `, 700, true)
+            Fire Plane 2 Left Animation 1
+        `, 300, true)
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
     animation.runImageAnimation(mySprite, assets.animation`
             Fire Plane 2 Right Animation
-        `, 700, true)
+        `, 300, true)
 })
 function init() {
+    game.set_dryness_of_grass(randint(2, 4))
+    game.set_strength_of_wind(randint(2, 4))
+    game.set_health_of_trees(randint(4, 9))
     hud.forest_hud_healthy(7)
     hud.forest_hud_burned(2)
     hud.danger_hud_label("Risc d'incendi")
@@ -34,6 +37,14 @@ sprites.on_fire_destroyed(function on_fire_destroyed(location2: tiles.Location) 
     `)
     music.thump.play()
 })
+info.onLifeZero(function on_life_zero() {
+    game.gameOver(false)
+    game.setGameOverMessage(false, "S'ha cremat tot!!!")
+})
+game.onGameOver(function on_game_over(win: boolean) {
+    game.gameOver(false)
+    game.setGameOverMessage(false, "S'ha cremat tot!!!")
+})
 controller.A.onEvent(ControllerButtonEvent.Repeated, function on_a_repeated() {
     sprites.spray(mySprite, assets.image`
         water
@@ -46,6 +57,23 @@ scene.onOverlapTile(SpriteKind.Water, assets.tile`
     sprite.destroy(effects.ashes, 500)
     sprites.change_flame_strength_by(location3, -1)
 })
+function chooseDifficulty() {
+    tiles.setTilemap(tilemap`
+                level1
+            `)
+    game.splash("Benvingut/da bomber/a!")
+    
+    difficulty = game.askForNumber("Escull la dificultat del bosc (1 o 2)", 1)
+    while (difficulty != 1 && difficulty != 2) {
+        game.splash("Tria 1 o 2")
+        difficulty = game.askForNumber("Escull dificultat (1 o 2)", 1)
+    }
+}
+
+function choosePlane() {
+    game.splash("hola")
+}
+
 function selectDifficulty() {
     
     level2 = 0
@@ -66,28 +94,47 @@ function selectDifficulty() {
 }
 
 let level2 = 0
+let difficulty = 1
 let mySprite : Sprite = null
-game.set_dryness_of_grass(randint(1, 4))
-game.set_strength_of_wind(randint(1, 4))
-game.set_health_of_trees(randint(5, 8))
-tiles.setTilemap(tilemap`
-    level1
-`)
+chooseDifficulty()
+if (difficulty == 1) {
+    tiles.setTilemap(tilemap`
+            level1
+        `)
+} else {
+    tiles.setTilemap(tilemap`
+            level2
+        `)
+}
+
 mySprite = sprites.create(assets.image`
         Fire Plane 2 Right
     `, SpriteKind.Player)
 controller.moveSprite(mySprite)
 scene.cameraFollowSprite(mySprite)
-game.showLongText("A per tirar aigua", DialogLayout.Top)
-for (let index = 0; index < 4; index++) {
+game.showLongText("Mou l'avió amb el cursor", DialogLayout.Bottom)
+music.play(music.stringPlayable("B G B G B G B G ", 120), music.PlaybackMode.LoopingInBackground)
+game.showLongText("Prem A per tirar aigua", DialogLayout.Top)
+init()
+for (let index = 0; index < randint(5, 20); index++) {
     sprites.create_spreading_fire(assets.tile`
             tree
         `, assets.tile`
             tree fire
         `)
 }
-init()
-music.play(music.stringPlayable("B G B G B G B G ", 120), music.PlaybackMode.LoopingInBackground)
 game.onUpdate(function on_on_update() {
     sprites.random_spread()
+})
+forever(function on_forever() {
+    if (info.life() < 3) {
+        mySprite.sayText("Afanya't!!", 500, true)
+    }
+    
+})
+statusbars.onZero(StatusBarKind.Health, function on_zero(status: StatusBarSprite) {
+    
+})
+statusbars.onDisplayUpdated(StatusBarKind.Health, function on_display_updated(status: StatusBarSprite, image: Image) {
+    
 })

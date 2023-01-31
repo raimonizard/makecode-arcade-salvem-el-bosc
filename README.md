@@ -12,7 +12,8 @@ This repository can be added as an **extension** in MakeCode.
 * click on **Extensions** under the gearwheel menu
 * search for **https://github.com/raimonizard/salvem-el-bosc-makecode-arcade** and import
 
-## Edit this project ![Build status badge](https://github.com/raimonizard/salvem-el-bosc-makecode-arcade/workflows/MakeCode/badge.svg)
+## Edit this project :grin: 
+<!-- ![Build status badge](https://github.com/raimonizard/salvem-el-bosc-makecode-arcade/workflows/MakeCode/badge.svg) -->
 
 To edit this repository in MakeCode.
 
