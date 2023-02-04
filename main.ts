@@ -6,6 +6,32 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
         firePlane.sayText("Som-hi!!", 500, true)
     }
 })
+function chooseLevel () {
+    tiles.setTilemap(tilemap`level1`)
+    music.play(music.stringPlayable("F G F A - F A G ", 130), music.PlaybackMode.LoopingInBackground)
+    if (settingLevel == 1 && difficulty == 0) {
+        game.splash("Benvingut/da bomber/a!")
+        game.splash("Escull el bosc petit", "o el bosc gran")
+        game.showLongText("Mou l'avió amb el cursor", DialogLayout.Bottom)
+        bforestA = sprites.create(assets.image`buttonA`, SpriteKind.button)
+        bforestB = sprites.create(assets.image`buttonB`, SpriteKind.button)
+        bforestA.setPosition(30, 75)
+        bforestB.setPosition(130, 70)
+        firePlane = sprites.create(assets.image`Fire Plane 2 Left`, SpriteKind.Player)
+        firePlane.setPosition(85, 70)
+        firePlane.setBounceOnWall(true)
+        firePlane.setStayInScreen(true)
+        controller.moveSprite(firePlane)
+    }
+    if (difficulty > 0) {
+        settingLevel = 0
+        sprites.destroy(bforestA)
+        sprites.destroy(bforestB)
+        sprites.destroy(firePlane)
+        music.stopAllSounds()
+        start_game()
+    }
+}
 // ################################################
 function init_config () {
     if (difficulty == 1) {
@@ -78,44 +104,22 @@ controller.A.onEvent(ControllerButtonEvent.Repeated, function () {
         music.play(music.createSoundEffect(WaveShape.Sine, 200, 600, 255, 0, 150, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
     }
 })
-function chooseDifficulty () {
-    tiles.setTilemap(tilemap`level1`)
-    music.play(music.stringPlayable("F G F A - F A G ", 130), music.PlaybackMode.LoopingInBackground)
-    if (settingLevel == 1 && difficulty == 0) {
-        game.splash("Benvingut/da bomber/a!")
-        game.splash("Escull el bosc petit", "o el bosc gran")
-        game.showLongText("Mou l'avió amb el cursor", DialogLayout.Bottom)
-        bforestA = sprites.create(assets.image`buttonA`, SpriteKind.button)
-        bforestB = sprites.create(assets.image`buttonB`, SpriteKind.button)
-        bforestA.setPosition(30, 75)
-        bforestB.setPosition(130, 70)
-        firePlane = sprites.create(assets.image`Fire Plane 2 Left`, SpriteKind.Player)
-        firePlane.setPosition(85, 70)
-        firePlane.setBounceOnWall(true)
-        firePlane.setStayInScreen(true)
-        controller.moveSprite(firePlane)
-    }
-    if (difficulty > 0) {
-        settingLevel = 0
-        sprites.destroy(bforestA)
-        sprites.destroy(bforestB)
-        sprites.destroy(firePlane)
-        music.stopAllSounds()
-        start_game()
-    }
-}
 scene.onOverlapTile(SpriteKind.Water, assets.tile`tree fire`, function (sprite2, location3) {
     sprite2.destroy(effects.ashes, 500)
     sprites.change_flame_strength_by(location3, -1)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.button, function (sprite, otherSprite) {
     if (settingLevel == 1) {
-        if (otherSprite == bforestA) {
+        otherSprite.startEffect(effects.halo, 1000)
+        firePlane.sayText("A per confirmar")
+        if (otherSprite == bforestA && controller.A.isPressed()) {
             difficulty = 1
-            chooseDifficulty()
-        } else if (otherSprite == bforestB) {
+            effects.clearParticles(otherSprite)
+            chooseLevel()
+        } else if (otherSprite == bforestB && controller.A.isPressed()) {
             difficulty = 2
-            chooseDifficulty()
+            effects.clearParticles(otherSprite)
+            chooseLevel()
         }
     }
 })
@@ -126,7 +130,7 @@ let firePlane: Sprite = null
 let settingLevel = 0
 let level2 = 0
 settingLevel = 1
-chooseDifficulty()
+chooseLevel()
 game.onUpdate(function () {
     sprites.random_spread()
 })
