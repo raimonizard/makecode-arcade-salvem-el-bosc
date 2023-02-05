@@ -1,65 +1,71 @@
 @namespace
 class SpriteKind:
     button = SpriteKind.create()
-    monkey = SpriteKind.create()
+    monkey_type = SpriteKind.create()
 
 def on_b_pressed():
-    if settingLevel != 1:
+    if setting_level != 1:
         fire_plane.say_text("Som-hi!!", 500, True)
 controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
 
-def chooseLevel():
-    global bforestA, bforestB, fire_plane, settingLevel
+def choose_level():
+    global forest_a, forest_b, fire_plane, setting_level
     tiles.set_tilemap(tilemap("""
         level1
     """))
     music.play(music.string_playable("F G F A - F A G ", 130),
         music.PlaybackMode.LOOPING_IN_BACKGROUND)
-    if settingLevel == 1 and difficulty == 0:
+    if setting_level == 1 and difficulty == 0:
         game.splash("Benvingut/da bomber/a!")
         game.splash("Escull el bosc petit", "o el bosc gran")
         game.show_long_text("Mou l'avió amb el cursor", DialogLayout.BOTTOM)
-        bforestA = sprites.create(assets.image("""
+        forest_a = sprites.create(assets.image("""
             forestA
         """), SpriteKind.button)
-        bforestB = sprites.create(assets.image("""
+        forest_b = sprites.create(assets.image("""
             forestB
         """), SpriteKind.button)
-        bforestA.set_position(30, 75)
-        bforestB.set_position(130, 70)
-        fire_plane = sprites.create(assets.image("""
-                Fire Plane 2 Left
-            """),
-            SpriteKind.player)
+        forest_a.set_position(30, 75)
+        forest_b.set_position(130, 70)
         fire_plane.set_position(85, 70)
         fire_plane.set_bounce_on_wall(True)
         fire_plane.set_stay_in_screen(True)
         controller.move_sprite(fire_plane)
     if difficulty > 0:
-        settingLevel = 0
-        sprites.destroy(bforestA)
-        sprites.destroy(bforestB)
+        setting_level = 0
+        sprites.destroy(forest_a)
+        sprites.destroy(forest_b)
         music.stop_all_sounds()
         start_game()
 
 def on_on_overlap(sprite3, otherSprite2):
-    global difficulty
-    otherSprite2.start_effect(effects.halo, 1000)
+    global fire_plane, setting_plane
+    otherSprite2.start_effect(effects.confetti, 500)
     monkey.say_text("A per confirmar", 1000, False)
     if otherSprite2 == red_plane and controller.A.is_pressed():
-        fire_plane.set_image(assets.image("""
-            Fire Plane 2 Right
-        """))
+        fire_plane = sprites.create(assets.image("Fire Plane 2 Right"), SpriteKind.player)
         effects.clear_particles(otherSprite2)
-        choosePlane()
-    elif otherSprite2 == bforestB and controller.A.is_pressed():
-        difficulty = 2
+        setting_plane = 0
+        choose_plane()
+    elif otherSprite2 == ryanair_plane and controller.A.is_pressed():
+        fire_plane = sprites.create(assets.image("ryanair"), SpriteKind.player)
         effects.clear_particles(otherSprite2)
-        choosePlane()
-sprites.on_overlap(SpriteKind.monkey, SpriteKind.button, on_on_overlap)
+        setting_plane = 0
+        choose_plane()
+    elif otherSprite2 == vueling_plane and controller.A.is_pressed():
+        fire_plane = sprites.create(assets.image("vuelingair"), SpriteKind.player)
+        effects.clear_particles(otherSprite2)
+        setting_plane = 0
+        choose_plane()
+    elif otherSprite2 == aalines_plane and controller.A.is_pressed():
+        fire_plane = sprites.create(assets.image("aalines"), SpriteKind.player)
+        effects.clear_particles(otherSprite2)
+        setting_plane = 0
+        choose_plane()
+sprites.on_overlap(SpriteKind.monkey_type, SpriteKind.button, on_on_overlap)
 
 def on_a_pressed():
-    if settingLevel != 1:
+    if setting_level != 1:
         sprites.spray(fire_plane, assets.image("""
             water
         """))
@@ -74,7 +80,7 @@ def on_a_pressed():
             music.PlaybackMode.IN_BACKGROUND)
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
-# ################################################
+# ################INIT-CONFIG################################
 def init_config():
     if difficulty == 1:
         game.splash("Bosc petit")
@@ -108,7 +114,7 @@ def on_fire_created(location):
 sprites.on_fire_created(on_fire_created)
 
 def on_left_pressed():
-    if settingLevel != 1:
+    if setting_level != 1:
         animation.run_image_animation(fire_plane,
             assets.animation("""
                 Fire Plane 2 Left Animation 1
@@ -119,10 +125,6 @@ controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
 def start_game():
     global fire_plane
-    fire_plane = sprites.create(assets.image("""
-            Fire Plane 2 Right
-        """),
-        SpriteKind.player)
     fire_plane.set_bounce_on_wall(False)
     controller.move_sprite(fire_plane)
     scene.camera_follow_sprite(fire_plane)
@@ -139,7 +141,7 @@ def start_game():
             """))
 
 def on_right_pressed():
-    if settingLevel != 1:
+    if setting_level != 1:
         animation.run_image_animation(fire_plane,
             assets.animation("""
                 Fire Plane 2 Right Animation
@@ -148,38 +150,46 @@ def on_right_pressed():
             True)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
-def choosePlane():
-    global red_plane, ryanair_plane, vueling_plane, aalines_plane, monkey
+def choose_plane():
+    global red_plane, ryanair_plane, vueling_plane, aalines_plane, monkey, setting_plane
     scene.set_background_color(9)
-    tiles.set_tilemap(tilemap("""
-        airport
-    """))
+    tiles.set_tilemap(tilemap("""airport"""))
     music.play(music.string_playable("B A A B B C5 C5 B ", 130),
         music.PlaybackMode.LOOPING_IN_BACKGROUND)
-    game.splash("Escull avió")
-    red_plane = sprites.create(assets.image("""
-            Fire Plane 2 Right
-        """),
-        SpriteKind.button)
-    red_plane.set_position(50, 20)
-    ryanair_plane = sprites.create(assets.image("""
-        ryanair
-    """), SpriteKind.button)
-    ryanair_plane.set_position(75, 52)
-    vueling_plane = sprites.create(assets.image("""
-        vuelingair
-    """), SpriteKind.button)
-    vueling_plane.set_position(120, 85)
-    aalines_plane = sprites.create(assets.image("""
-        aalines
-    """), SpriteKind.button)
-    aalines_plane.set_position(85, 112)
-    monkey = sprites.create(assets.image("""
-        monkey-player
-    """), SpriteKind.monkey)
-    monkey.set_position(9, 62)
-    monkey.set_stay_in_screen(True)
-    controller.move_sprite(monkey)
+    if setting_plane == 1:
+        game.splash("Escull avió")
+        red_plane = sprites.create(assets.image("""
+                Fire Plane 2 Right
+            """),
+            SpriteKind.button)
+        red_plane.set_position(50, 20)
+        ryanair_plane = sprites.create(assets.image("""
+            ryanair
+        """), SpriteKind.button)
+        ryanair_plane.set_position(75, 52)
+        vueling_plane = sprites.create(assets.image("""
+            vuelingair
+        """), SpriteKind.button)
+        vueling_plane.set_position(120, 85)
+        aalines_plane = sprites.create(assets.image("""
+            aalines
+        """), SpriteKind.button)
+        aalines_plane.set_position(85, 112)
+        monkey = sprites.create(assets.image("""
+            monkey-player
+        """), SpriteKind.monkey_type)
+        monkey.set_position(9, 62)
+        monkey.set_stay_in_screen(True)
+        controller.move_sprite(monkey)
+    else:
+        setting_plane = 0
+        sprites.destroy(red_plane)
+        sprites.destroy(ryanair_plane)
+        sprites.destroy(vueling_plane)
+        sprites.destroy(aalines_plane)
+        sprites.destroy(monkey)
+        music.stop_all_sounds()
+        choose_level()
 
 def on_fire_destroyed(location2):
     scene.clear_particle_effects_at_location(location2)
@@ -195,7 +205,7 @@ def on_life_zero():
 info.on_life_zero(on_life_zero)
 
 def on_a_repeated():
-    if settingLevel != 1:
+    if setting_level != 1:
         sprites.spray(fire_plane, assets.image("""
             water
         """))
@@ -221,17 +231,17 @@ scene.on_overlap_tile(SpriteKind.water,
 
 def on_on_overlap2(sprite, otherSprite):
     global difficulty
-    if settingLevel == 1:
+    if setting_level == 1:
         otherSprite.start_effect(effects.halo, 1000)
         fire_plane.say_text("A per confirmar", 1000, False)
-        if otherSprite == bforestA and controller.A.is_pressed():
+        if otherSprite == forest_a and controller.A.is_pressed():
             difficulty = 1
             effects.clear_particles(otherSprite)
-            chooseLevel()
-        elif otherSprite == bforestB and controller.A.is_pressed():
+            choose_level()
+        elif otherSprite == forest_b and controller.A.is_pressed():
             difficulty = 2
             effects.clear_particles(otherSprite)
-            chooseLevel()
+            choose_level()
 sprites.on_overlap(SpriteKind.player, SpriteKind.button, on_on_overlap2)
 
 aalines_plane: Sprite = None
@@ -239,12 +249,13 @@ vueling_plane: Sprite = None
 ryanair_plane: Sprite = None
 red_plane: Sprite = None
 monkey: Sprite = None
-bforestB: Sprite = None
-bforestA: Sprite = None
+forest_a: Sprite = None
+forest_b: Sprite = None
 difficulty = 0
 fire_plane: Sprite = None
-settingLevel = 1
-choosePlane()
+setting_plane = 1
+setting_level = 1
+choose_plane()
 
 def on_on_update():
     sprites.random_spread()
