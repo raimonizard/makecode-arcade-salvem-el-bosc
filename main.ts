@@ -15,8 +15,8 @@ function choose_level() {
         level1
     `)
     music.play(music.stringPlayable("F G F A - F A G ", 130), music.PlaybackMode.LoopingInBackground)
-    if (setting_level == 1 && difficulty == 0) {
-        game.splash("Benvingut/da bomber/a!")
+    if (setting_level == 1 && chosen_level == 0) {
+        game.splash("Benvingut/da pilot!")
         game.splash("Escull el bosc petit", "o el bosc gran")
         game.showLongText("Mou l'avió amb el cursor", DialogLayout.Bottom)
         forest_a = sprites.create(assets.image`
@@ -33,7 +33,7 @@ function choose_level() {
         controller.moveSprite(fire_plane)
     }
     
-    if (difficulty > 0) {
+    if (chosen_level > 0) {
         setting_level = 0
         sprites.destroy(forest_a)
         sprites.destroy(forest_b)
@@ -43,33 +43,6 @@ function choose_level() {
     
 }
 
-sprites.onOverlap(SpriteKind.monkey_type, SpriteKind.button, function on_on_overlap(sprite3: Sprite, otherSprite2: Sprite) {
-    
-    otherSprite2.startEffect(effects.confetti, 500)
-    monkey.sayText("A per confirmar", 1000, false)
-    if (otherSprite2 == red_plane && controller.A.isPressed()) {
-        fire_plane = sprites.create(assets.image`Fire Plane 2 Right`, SpriteKind.Player)
-        effects.clearParticles(otherSprite2)
-        setting_plane = 0
-        choose_plane()
-    } else if (otherSprite2 == ryanair_plane && controller.A.isPressed()) {
-        fire_plane = sprites.create(assets.image`ryanair`, SpriteKind.Player)
-        effects.clearParticles(otherSprite2)
-        setting_plane = 0
-        choose_plane()
-    } else if (otherSprite2 == vueling_plane && controller.A.isPressed()) {
-        fire_plane = sprites.create(assets.image`vuelingair`, SpriteKind.Player)
-        effects.clearParticles(otherSprite2)
-        setting_plane = 0
-        choose_plane()
-    } else if (otherSprite2 == aalines_plane && controller.A.isPressed()) {
-        fire_plane = sprites.create(assets.image`aalines`, SpriteKind.Player)
-        effects.clearParticles(otherSprite2)
-        setting_plane = 0
-        choose_plane()
-    }
-    
-})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     if (setting_level != 1) {
         sprites.spray(fire_plane, assets.image`
@@ -81,15 +54,15 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
 })
 //  ################INIT-CONFIG################################
 function init_config() {
-    if (difficulty == 1) {
+    if (chosen_level == 1) {
         game.splash("Bosc petit")
         tiles.setTilemap(tilemap`
             level1
         `)
-        game.set_dryness_of_grass(randint(1, 3))
-        game.set_strength_of_wind(randint(1, 3))
+        game.set_dryness_of_grass(randint(2, 4))
+        game.set_strength_of_wind(randint(2, 4))
         game.set_health_of_trees(randint(5, 9))
-    } else if (difficulty == 2) {
+    } else if (chosen_level == 2) {
         game.splash("Bosc gran")
         tiles.setTilemap(tilemap`
             level2
@@ -115,10 +88,26 @@ sprites.on_fire_created(function on_fire_created(location: tiles.Location) {
     music.knock.play()
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
-    if (setting_level != 1) {
-        animation.runImageAnimation(fire_plane, assets.animation`
-                Fire Plane 2 Left Animation 1
+    if (setting_plane == 1) {
+        animation.runImageAnimation(monkey, assets.animation`
+                monkey_left
             `, 300, true)
+    } else if (chosen_plane == 1) {
+        animation.runImageAnimation(fire_plane, assets.animation`
+                    red_plane_left
+                `, 300, true)
+    } else if (chosen_plane == 2) {
+        animation.runImageAnimation(fire_plane, assets.animation`
+                    ryanair_left
+                `, 300, true)
+    } else if (chosen_plane == 3) {
+        animation.runImageAnimation(fire_plane, assets.animation`
+                    vueling_left
+                `, 300, true)
+    } else if (chosen_plane == 4) {
+        animation.runImageAnimation(fire_plane, assets.animation`
+                    aalines_left
+                `, 300, true)
     }
     
 })
@@ -131,19 +120,79 @@ function start_game() {
     music.play(music.stringPlayable("B G B G B G B G ", 120), music.PlaybackMode.LoopingInBackground)
     game.showLongText("Prem A per tirar aigua", DialogLayout.Top)
     for (let index = 0; index < randint(4, 10); index++) {
-        sprites.create_spreading_fire(assets.tile`
+        if (chosen_level == 1 && index % 2 == 0) {
+            continue
+        } else {
+            sprites.create_spreading_fire(assets.tile`
                 tree
             `, assets.tile`
                 tree fire
             `)
+        }
+        
     }
 }
 
 controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
-    if (setting_level != 1) {
-        animation.runImageAnimation(fire_plane, assets.animation`
-                Fire Plane 2 Right Animation
+    if (setting_plane == 1) {
+        animation.runImageAnimation(monkey, assets.animation`
+                monkey_right
             `, 300, true)
+    } else if (chosen_plane == 1) {
+        animation.runImageAnimation(fire_plane, assets.animation`
+                    red_plane_right
+                `, 300, true)
+    } else if (chosen_plane == 2) {
+        animation.runImageAnimation(fire_plane, assets.animation`
+                    ryanair_right
+                `, 300, true)
+    } else if (chosen_plane == 3) {
+        animation.runImageAnimation(fire_plane, assets.animation`
+                    vueling_right
+                `, 300, true)
+    } else if (chosen_plane == 4) {
+        animation.runImageAnimation(fire_plane, assets.animation`
+                    aalines_right
+                `, 300, true)
+    }
+    
+})
+sprites.onOverlap(SpriteKind.monkey_type, SpriteKind.button, function on_on_overlap(sprite3: Sprite, otherSprite2: Sprite) {
+    
+    otherSprite2.startEffect(effects.confetti, 500)
+    monkey.sayText("Prem A per confirmar", 800, false)
+    if (otherSprite2 == red_plane && controller.A.isPressed()) {
+        fire_plane = sprites.create(assets.image`Fire Plane 2 Right`, SpriteKind.Player)
+        fire_plane.setPosition(50, 20)
+        effects.clearParticles(otherSprite2)
+        chosen_plane = 1
+        //  red_plane
+        setting_plane = 0
+        choose_plane()
+    } else if (otherSprite2 == ryanair_plane && controller.A.isPressed()) {
+        fire_plane = sprites.create(assets.image`ryanair`, SpriteKind.Player)
+        fire_plane.setPosition(75, 52)
+        effects.clearParticles(otherSprite2)
+        chosen_plane = 2
+        //  ryanair
+        setting_plane = 0
+        choose_plane()
+    } else if (otherSprite2 == vueling_plane && controller.A.isPressed()) {
+        fire_plane = sprites.create(assets.image`vuelingair`, SpriteKind.Player)
+        fire_plane.setPosition(120, 85)
+        effects.clearParticles(otherSprite2)
+        chosen_plane = 3
+        //  vueling
+        setting_plane = 0
+        choose_plane()
+    } else if (otherSprite2 == aalines_plane && controller.A.isPressed()) {
+        fire_plane = sprites.create(assets.image`aalines`, SpriteKind.Player)
+        fire_plane.setPosition(85, 112)
+        effects.clearParticles(otherSprite2)
+        chosen_plane = 4
+        //  aalines
+        setting_plane = 0
+        choose_plane()
     }
     
 })
@@ -151,9 +200,10 @@ function choose_plane() {
     
     scene.setBackgroundColor(9)
     tiles.setTilemap(tilemap`airport`)
-    music.play(music.stringPlayable("B A A B B C5 C5 B ", 130), music.PlaybackMode.LoopingInBackground)
     if (setting_plane == 1) {
-        game.splash("Escull avió")
+        game.splash("Benvingut/da", "bomber/a!")
+        music.play(music.stringPlayable("G F F A B C D E F E D D D D C B A G B A A G F A G D ", 110), music.PlaybackMode.LoopingInBackground)
+        game.splash("Escull un avió")
         red_plane = sprites.create(assets.image`
                 Fire Plane 2 Right
             `, SpriteKind.button)
@@ -183,7 +233,13 @@ function choose_plane() {
         sprites.destroy(vueling_plane)
         sprites.destroy(aalines_plane)
         sprites.destroy(monkey)
+        fire_plane.sayText("Yuhuu!!")
+        fire_plane.setVelocity(50, 0)
+        basic.pause(2000)
+        fire_plane.setPosition(50, 50)
+        fire_plane.setVelocity(0, 0)
         music.stopAllSounds()
+        effects.blizzard.startScreenEffect()
         choose_level()
     }
     
@@ -219,13 +275,13 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.button, function on_on_overlap2(
     
     if (setting_level == 1) {
         otherSprite.startEffect(effects.halo, 1000)
-        fire_plane.sayText("A per confirmar", 1000, false)
+        fire_plane.sayText("Prem A per confirmar", 1000, false)
         if (otherSprite == forest_a && controller.A.isPressed()) {
-            difficulty = 1
+            chosen_level = 1
             effects.clearParticles(otherSprite)
             choose_level()
         } else if (otherSprite == forest_b && controller.A.isPressed()) {
-            difficulty = 2
+            chosen_level = 2
             effects.clearParticles(otherSprite)
             choose_level()
         }
@@ -233,14 +289,15 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.button, function on_on_overlap2(
     }
     
 })
-let aalines_plane : Sprite = null
-let vueling_plane : Sprite = null
-let ryanair_plane : Sprite = null
 let red_plane : Sprite = null
+let ryanair_plane : Sprite = null
+let vueling_plane : Sprite = null
+let aalines_plane : Sprite = null
+let chosen_plane = 0
 let monkey : Sprite = null
 let forest_a : Sprite = null
 let forest_b : Sprite = null
-let difficulty = 0
+let chosen_level = 0
 let fire_plane : Sprite = null
 let setting_plane = 1
 let setting_level = 1
