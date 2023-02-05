@@ -5,7 +5,7 @@ namespace SpriteKind {
 
 controller.B.onEvent(ControllerButtonEvent.Pressed, function on_b_pressed() {
     if (settingLevel != 1) {
-        firePlane.sayText("Som-hi!!", 500, true)
+        fire_plane.sayText("Som-hi!!", 500, true)
     }
     
 })
@@ -27,13 +27,13 @@ function chooseLevel() {
         `, SpriteKind.button)
         bforestA.setPosition(30, 75)
         bforestB.setPosition(130, 70)
-        firePlane = sprites.create(assets.image`
+        fire_plane = sprites.create(assets.image`
                 Fire Plane 2 Left
             `, SpriteKind.Player)
-        firePlane.setPosition(85, 70)
-        firePlane.setBounceOnWall(true)
-        firePlane.setStayInScreen(true)
-        controller.moveSprite(firePlane)
+        fire_plane.setPosition(85, 70)
+        fire_plane.setBounceOnWall(true)
+        fire_plane.setStayInScreen(true)
+        controller.moveSprite(fire_plane)
     }
     
     if (difficulty > 0) {
@@ -48,12 +48,10 @@ function chooseLevel() {
 
 sprites.onOverlap(SpriteKind.monkey, SpriteKind.button, function on_on_overlap(sprite3: Sprite, otherSprite2: Sprite) {
     
-    let red_plane : Sprite = null
-    let monkey3 : Sprite = null
     otherSprite2.startEffect(effects.halo, 1000)
-    monkey3.sayText("A per confirmar", 1000, false)
+    monkey.sayText("A per confirmar", 1000, false)
     if (otherSprite2 == red_plane && controller.A.isPressed()) {
-        firePlane.setImage(assets.image`
+        fire_plane.setImage(assets.image`
             Fire Plane 2 Right
         `)
         effects.clearParticles(otherSprite2)
@@ -67,7 +65,7 @@ sprites.onOverlap(SpriteKind.monkey, SpriteKind.button, function on_on_overlap(s
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     if (settingLevel != 1) {
-        sprites.spray(firePlane, assets.image`
+        sprites.spray(fire_plane, assets.image`
             water
         `)
         music.play(music.createSoundEffect(WaveShape.Sine, 200, 600, 255, 0, 150, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
@@ -111,7 +109,7 @@ sprites.on_fire_created(function on_fire_created(location: tiles.Location) {
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
     if (settingLevel != 1) {
-        animation.runImageAnimation(firePlane, assets.animation`
+        animation.runImageAnimation(fire_plane, assets.animation`
                 Fire Plane 2 Left Animation 1
             `, 300, true)
     }
@@ -119,12 +117,12 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed(
 })
 function start_game() {
     
-    firePlane = sprites.create(assets.image`
+    fire_plane = sprites.create(assets.image`
             Fire Plane 2 Right
         `, SpriteKind.Player)
-    firePlane.setBounceOnWall(false)
-    controller.moveSprite(firePlane)
-    scene.cameraFollowSprite(firePlane)
+    fire_plane.setBounceOnWall(false)
+    controller.moveSprite(fire_plane)
+    scene.cameraFollowSprite(fire_plane)
     init_config()
     music.play(music.stringPlayable("B G B G B G B G ", 120), music.PlaybackMode.LoopingInBackground)
     game.showLongText("Prem A per tirar aigua", DialogLayout.Top)
@@ -139,7 +137,7 @@ function start_game() {
 
 controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
     if (settingLevel != 1) {
-        animation.runImageAnimation(firePlane, assets.animation`
+        animation.runImageAnimation(fire_plane, assets.animation`
                 Fire Plane 2 Right Animation
             `, 300, true)
     }
@@ -153,28 +151,28 @@ function choosePlane() {
     `)
     music.play(music.stringPlayable("B A A B B C5 C5 B ", 130), music.PlaybackMode.LoopingInBackground)
     game.splash("Escull avió")
-    let redplane = sprites.create(assets.image`
+    red_plane = sprites.create(assets.image`
             Fire Plane 2 Right
         `, SpriteKind.button)
-    redplane.setPosition(50, 20)
-    let ryanairplane = sprites.create(assets.image`
+    red_plane.setPosition(50, 20)
+    ryanair_plane = sprites.create(assets.image`
         ryanair
     `, SpriteKind.button)
-    ryanairplane.setPosition(75, 52)
-    let vuelingplane = sprites.create(assets.image`
+    ryanair_plane.setPosition(75, 52)
+    vueling_plane = sprites.create(assets.image`
         vuelingair
     `, SpriteKind.button)
-    vuelingplane.setPosition(120, 85)
-    let aalinesplane = sprites.create(assets.image`
+    vueling_plane.setPosition(120, 85)
+    aalines_plane = sprites.create(assets.image`
         aalines
     `, SpriteKind.button)
-    aalinesplane.setPosition(85, 112)
-    let monkey2 = sprites.create(assets.image`
+    aalines_plane.setPosition(85, 112)
+    monkey = sprites.create(assets.image`
         monkey-player
     `, SpriteKind.monkey)
-    monkey2.setPosition(9, 62)
-    monkey2.setStayInScreen(true)
-    controller.moveSprite(monkey2)
+    monkey.setPosition(9, 62)
+    monkey.setStayInScreen(true)
+    controller.moveSprite(monkey)
 }
 
 sprites.on_fire_destroyed(function on_fire_destroyed(location2: tiles.Location) {
@@ -190,7 +188,7 @@ info.onLifeZero(function on_life_zero() {
 })
 controller.A.onEvent(ControllerButtonEvent.Repeated, function on_a_repeated() {
     if (settingLevel != 1) {
-        sprites.spray(firePlane, assets.image`
+        sprites.spray(fire_plane, assets.image`
             water
         `)
         music.play(music.createSoundEffect(WaveShape.Sine, 200, 600, 255, 0, 150, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
@@ -207,7 +205,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.button, function on_on_overlap2(
     
     if (settingLevel == 1) {
         otherSprite.startEffect(effects.halo, 1000)
-        firePlane.sayText("A per confirmar", 1000, false)
+        fire_plane.sayText("A per confirmar", 1000, false)
         if (otherSprite == bforestA && controller.A.isPressed()) {
             difficulty = 1
             effects.clearParticles(otherSprite)
@@ -221,17 +219,16 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.button, function on_on_overlap2(
     }
     
 })
+let aalines_plane : Sprite = null
+let vueling_plane : Sprite = null
+let ryanair_plane : Sprite = null
+let red_plane : Sprite = null
+let monkey : Sprite = null
 let bforestB : Sprite = null
 let bforestA : Sprite = null
 let difficulty = 0
-let firePlane : Sprite = null
-let settingLevel = 0
-let red_plane : Sprite = null
-let ryanair_plane : Sprite = null
-let vueling_plane : Sprite = null
-let aalines_plane : Sprite = null
-let monkey : Sprite = null
-settingLevel = 1
+let fire_plane : Sprite = null
+let settingLevel = 1
 choosePlane()
 game.onUpdate(function on_on_update() {
     sprites.random_spread()
