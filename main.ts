@@ -3,9 +3,16 @@ namespace SpriteKind {
     export const monkey_type = SpriteKind.create()
 }
 
-controller.B.onEvent(ControllerButtonEvent.Pressed, function on_b_pressed() {
+controller.B.onEvent(ControllerButtonEvent.Pressed, function on_b_repeated() {
     if (setting_level != 1) {
         fire_plane.sayText("Som-hi!!", 500, true)
+        controller.moveSprite(fire_plane, 150, 150)
+    }
+    
+})
+controller.B.onEvent(ControllerButtonEvent.Released, function on_b_released() {
+    if (setting_level != 1) {
+        controller.moveSprite(fire_plane, 100, 100)
     }
     
 })
@@ -119,6 +126,7 @@ function start_game() {
     init_config()
     music.play(music.stringPlayable("B G B G B G B G ", 120), music.PlaybackMode.LoopingInBackground)
     game.showLongText("Prem A per tirar aigua", DialogLayout.Top)
+    game.showLongText("Prem B per activar el turbo", DialogLayout.Bottom)
     for (let index = 0; index < randint(4, 10); index++) {
         if (chosen_level == 1 && index % 2 == 0) {
             continue
@@ -233,6 +241,7 @@ function choose_plane() {
         sprites.destroy(vueling_plane)
         sprites.destroy(aalines_plane)
         sprites.destroy(monkey)
+        fire_plane.z = 1
         fire_plane.sayText("Yuhuu!!")
         fire_plane.setVelocity(50, 0)
         basic.pause(2000)

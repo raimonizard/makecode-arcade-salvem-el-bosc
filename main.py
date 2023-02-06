@@ -3,10 +3,16 @@ class SpriteKind:
     button = SpriteKind.create()
     monkey_type = SpriteKind.create()
 
-def on_b_pressed():
+def on_b_repeated():
     if setting_level != 1:
         fire_plane.say_text("Som-hi!!", 500, True)
-controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
+        controller.move_sprite(fire_plane, 150, 150)
+controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_repeated)
+
+def on_b_released():
+    if setting_level != 1:
+        controller.move_sprite(fire_plane, 100, 100)
+controller.B.on_event(ControllerButtonEvent.RELEASED, on_b_released)
 
 def choose_level():
     global forest_a, forest_b, fire_plane, setting_level
@@ -37,8 +43,6 @@ def choose_level():
         sprites.destroy(forest_b)
         music.stop_all_sounds()
         start_game()
-
-
 
 def on_a_pressed():
     if setting_level != 1:
@@ -137,6 +141,7 @@ def start_game():
     music.play(music.string_playable("B G B G B G B G ", 120),
         music.PlaybackMode.LOOPING_IN_BACKGROUND)
     game.show_long_text("Prem A per tirar aigua", DialogLayout.TOP)
+    game.show_long_text("Prem B per activar el turbo", DialogLayout.BOTTOM)
     for index in range(randint(4, 10)):
         if chosen_level == 1 and (index % 2) == 0:
             continue
@@ -260,6 +265,7 @@ def choose_plane():
         sprites.destroy(vueling_plane)
         sprites.destroy(aalines_plane)
         sprites.destroy(monkey)
+        fire_plane.z = 1
         fire_plane.say_text("Yuhuu!!")
         fire_plane.set_velocity(50, 0)
         basic.pause(2000)        
