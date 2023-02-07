@@ -3,11 +3,11 @@ class SpriteKind:
     button = SpriteKind.create()
     monkey_type = SpriteKind.create()
 
-def on_b_repeated():
+def on_b_pressed():
     if setting_level != 1:
         fire_plane.say_text("Som-hi!!", 500, True)
         controller.move_sprite(fire_plane, 150, 150)
-controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_repeated)
+controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
 
 def on_b_released():
     if setting_level != 1:
@@ -142,7 +142,7 @@ def start_game():
         music.PlaybackMode.LOOPING_IN_BACKGROUND)
     game.show_long_text("Prem A per tirar aigua", DialogLayout.TOP)
     game.show_long_text("Prem B per activar el turbo", DialogLayout.BOTTOM)
-    for index in range(randint(4, 10)):
+    for index in range(randint(3, 6)):
         if chosen_level == 1 and (index % 2) == 0:
             continue
         else:
@@ -192,7 +192,7 @@ def on_right_pressed():
                 True)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
-def on_on_overlap(sprite3, otherSprite2):
+def on_on_overlap_plane(sprite3, otherSprite2):
     global fire_plane, setting_plane, chosen_plane
     otherSprite2.start_effect(effects.confetti, 500)
     monkey.say_text("Prem A per confirmar", 800, False)
@@ -224,7 +224,7 @@ def on_on_overlap(sprite3, otherSprite2):
         chosen_plane = 4 # aalines
         setting_plane = 0
         choose_plane()
-sprites.on_overlap(SpriteKind.monkey_type, SpriteKind.button, on_on_overlap)
+sprites.on_overlap(SpriteKind.monkey_type, SpriteKind.button, on_on_overlap_plane)
 
 def choose_plane():
     global red_plane, ryanair_plane, vueling_plane, aalines_plane, monkey, setting_plane
@@ -265,7 +265,7 @@ def choose_plane():
         sprites.destroy(vueling_plane)
         sprites.destroy(aalines_plane)
         sprites.destroy(monkey)
-        fire_plane.z = 1
+        fire_plane.z = 1 # Setting fire_plane sprite over tree sprite
         fire_plane.say_text("Yuhuu!!")
         fire_plane.set_velocity(50, 0)
         basic.pause(2000)        
@@ -313,7 +313,7 @@ scene.on_overlap_tile(SpriteKind.water,
     """),
     on_overlap_tile)
 
-def on_on_overlap2(sprite, otherSprite):
+def on_on_overlap_level(sprite, otherSprite):
     global chosen_level
     if setting_level == 1:
         otherSprite.start_effect(effects.halo, 1000)
@@ -326,7 +326,7 @@ def on_on_overlap2(sprite, otherSprite):
             chosen_level = 2
             effects.clear_particles(otherSprite)
             choose_level()
-sprites.on_overlap(SpriteKind.player, SpriteKind.button, on_on_overlap2)
+sprites.on_overlap(SpriteKind.player, SpriteKind.button, on_on_overlap_level)
 
 red_plane: Sprite = None
 ryanair_plane: Sprite = None

@@ -3,7 +3,7 @@ namespace SpriteKind {
     export const monkey_type = SpriteKind.create()
 }
 
-controller.B.onEvent(ControllerButtonEvent.Pressed, function on_b_repeated() {
+controller.B.onEvent(ControllerButtonEvent.Pressed, function on_b_pressed() {
     if (setting_level != 1) {
         fire_plane.sayText("Som-hi!!", 500, true)
         controller.moveSprite(fire_plane, 150, 150)
@@ -127,7 +127,7 @@ function start_game() {
     music.play(music.stringPlayable("B G B G B G B G ", 120), music.PlaybackMode.LoopingInBackground)
     game.showLongText("Prem A per tirar aigua", DialogLayout.Top)
     game.showLongText("Prem B per activar el turbo", DialogLayout.Bottom)
-    for (let index = 0; index < randint(4, 10); index++) {
+    for (let index = 0; index < randint(3, 6); index++) {
         if (chosen_level == 1 && index % 2 == 0) {
             continue
         } else {
@@ -165,7 +165,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_presse
     }
     
 })
-sprites.onOverlap(SpriteKind.monkey_type, SpriteKind.button, function on_on_overlap(sprite3: Sprite, otherSprite2: Sprite) {
+sprites.onOverlap(SpriteKind.monkey_type, SpriteKind.button, function on_on_overlap_plane(sprite3: Sprite, otherSprite2: Sprite) {
     
     otherSprite2.startEffect(effects.confetti, 500)
     monkey.sayText("Prem A per confirmar", 800, false)
@@ -242,6 +242,7 @@ function choose_plane() {
         sprites.destroy(aalines_plane)
         sprites.destroy(monkey)
         fire_plane.z = 1
+        //  Setting fire_plane sprite over tree sprite
         fire_plane.sayText("Yuhuu!!")
         fire_plane.setVelocity(50, 0)
         basic.pause(2000)
@@ -280,7 +281,7 @@ scene.onOverlapTile(SpriteKind.Water, assets.tile`
     sprite2.destroy(effects.ashes, 500)
     sprites.change_flame_strength_by(location3, -1)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.button, function on_on_overlap2(sprite: Sprite, otherSprite: Sprite) {
+sprites.onOverlap(SpriteKind.Player, SpriteKind.button, function on_on_overlap_level(sprite: Sprite, otherSprite: Sprite) {
     
     if (setting_level == 1) {
         otherSprite.startEffect(effects.halo, 1000)
