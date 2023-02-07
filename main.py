@@ -60,7 +60,7 @@ def on_a_pressed():
             music.PlaybackMode.IN_BACKGROUND)
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
-# ################INIT-CONFIG################################
+# ################ INIT-CONFIG ################################
 def init_config():
     if chosen_level == 1:
         game.splash("Bosc petit")
@@ -142,8 +142,8 @@ def start_game():
         music.PlaybackMode.LOOPING_IN_BACKGROUND)
     game.show_long_text("Prem A per tirar aigua", DialogLayout.TOP)
     game.show_long_text("Prem B per activar el turbo", DialogLayout.BOTTOM)
-    for index in range(randint(3, 6)):
-        if chosen_level == 1 and (index % 2) == 0:
+    for index in range(randint(4, 7)):
+        if chosen_level == 1 and ((index % 2) == 0):
             continue
         else:
             sprites.create_spreading_fire(assets.tile("""
@@ -232,7 +232,7 @@ def choose_plane():
     tiles.set_tilemap(tilemap("""airport"""))
     if setting_plane == 1:
         game.splash("Benvingut/da", "bomber/a!")
-        music.play(music.string_playable("G F F A B C D E F E D D D D C B A G B A A G F A G D ", 110),
+        music.play(music.string_playable("E E F G G F E D C C D E E D D E E F G G F E D C C D E D C C ", 110),
                 music.PlaybackMode.LOOPING_IN_BACKGROUND)        
         game.splash("Escull un avió")
         red_plane = sprites.create(assets.image("""

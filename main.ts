@@ -59,7 +59,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     }
     
 })
-//  ################INIT-CONFIG################################
+//  ################ INIT-CONFIG ################################
 function init_config() {
     if (chosen_level == 1) {
         game.splash("Bosc petit")
@@ -127,7 +127,7 @@ function start_game() {
     music.play(music.stringPlayable("B G B G B G B G ", 120), music.PlaybackMode.LoopingInBackground)
     game.showLongText("Prem A per tirar aigua", DialogLayout.Top)
     game.showLongText("Prem B per activar el turbo", DialogLayout.Bottom)
-    for (let index = 0; index < randint(3, 6); index++) {
+    for (let index = 0; index < randint(4, 7); index++) {
         if (chosen_level == 1 && index % 2 == 0) {
             continue
         } else {
@@ -210,7 +210,7 @@ function choose_plane() {
     tiles.setTilemap(tilemap`airport`)
     if (setting_plane == 1) {
         game.splash("Benvingut/da", "bomber/a!")
-        music.play(music.stringPlayable("G F F A B C D E F E D D D D C B A G B A A G F A G D ", 110), music.PlaybackMode.LoopingInBackground)
+        music.play(music.stringPlayable("E E F G G F E D C C D E E D D E E F G G F E D C C D E D C C ", 110), music.PlaybackMode.LoopingInBackground)
         game.splash("Escull un avió")
         red_plane = sprites.create(assets.image`
                 Fire Plane 2 Right
