@@ -128,9 +128,7 @@ function start_game () {
     game.showLongText("Prem A per tirar aigua", DialogLayout.Top)
     game.showLongText("Prem B per activar el turbo", DialogLayout.Bottom)
     while (index <= randint(4, 7) - 1) {
-        if (chosen_level == 1 && index % 2 == 0) {
-            continue;
-        } else {
+        if (chosen_level == 1 || index % 2 == 0) {
             sprites.create_spreading_fire(assets.tile`tree`, assets.tile`tree fire`)
         }
         index += 1
