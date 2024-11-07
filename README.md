@@ -1,7 +1,7 @@
  
 
 
-> Open this page at [https://raimonizard.github.io/salvem-el-bosc-makecode-arcade/](https://raimonizard.github.io/salvem-el-bosc-makecode-arcade/)
+> Open this page at [https://raimonizard.github.io/salvem-el-bosc-makecode-arcade/](https://raimonizard.github.io/makecode-arcade-salvem-el-bosc/)
 
 ## Use as Extension
 
